@@ -37,3 +37,28 @@ func TestNewArbitraryInt(t *testing.T) {
 		})
 	}
 }
+
+func TestCompare(t *testing.T) {
+	testCases := []struct {
+		a, b     string
+		expected int
+	}{
+		{"100", "99", 1},
+		{"99", "100", -1},
+		{"100", "100", 0},
+		{"-100", "99", -1},
+		{"100", "-99", 1},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.a+" vs "+tc.b, func(t *testing.T) {
+			numA, _ := NewArbitraryInt(tc.a)
+			numB, _ := NewArbitraryInt(tc.b)
+
+			result := numA.Compare(numB)
+			if result != tc.expected {
+				t.Errorf("Expected comparison result %d, got %d", tc.expected, result)
+			}
+		})
+	}
+}
