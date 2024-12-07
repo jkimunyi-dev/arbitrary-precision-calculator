@@ -98,3 +98,8 @@ func (a *ArbitraryInt) Abs() *ArbitraryInt {
 	copy.negative = false
 	return copy
 }
+
+// IsZero checks if the number is zero
+func (a *ArbitraryInt) IsZero() bool {
+	return len(a.digits) == 0
+}
