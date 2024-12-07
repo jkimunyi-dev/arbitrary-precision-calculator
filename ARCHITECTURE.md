@@ -23,7 +23,7 @@ ensuring the core functionality is clean, reusable, and easily testable.
 
 ### 2. **REPL (Read-Eval-Print Loop)**
 
-- **File:** `repl/repl.go`
+- **File:** `cmd/repl/repl.go`
 - **Responsibilities:**
   - Provides an interactive interface for the user.
   - Parses user input for commands and operations.
@@ -46,7 +46,7 @@ ensuring the core functionality is clean, reusable, and easily testable.
 
 ### 4. **Utilities**
 
-- **File:** `internal/utils.go`
+- **File:** `internal/advanced_operation.go`
 - **Responsibilities:**
   - Contains helper functions for parsing and validating input.
   - Converts between different numerical bases (binary, hexadecimal, etc.).
@@ -60,6 +60,20 @@ ensuring the core functionality is clean, reusable, and easily testable.
 - **Responsibilities:**
   - Stores constant values used throughout the application, such as operation
     symbols and error messages.
+
+---
+
+---
+
+### 5. **Tests**
+
+- **File:** `internal/unit_test.go`
+- **Responsibilities:**
+  - Performs unit tests
+
+- **File:** `internal/advanced_operations_test.go`
+- **Responsibilities:**
+  - Performs tests for `bash advanced_operation.go`
 
 ---
 
