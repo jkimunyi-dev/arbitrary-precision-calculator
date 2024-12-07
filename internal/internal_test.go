@@ -188,3 +188,13 @@ func TestDivision(t *testing.T) {
 		})
 	}
 }
+
+func TestDivisionByZero(t *testing.T) {
+	numA, _ := NewArbitraryInt("10")
+	numB, _ := NewArbitraryInt("0")
+
+	_, _, err := numA.Divide(numB)
+	if err == nil {
+		t.Errorf("Expected division by zero error, got none")
+	}
+}
