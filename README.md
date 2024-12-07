@@ -109,6 +109,15 @@ Example:
 
 ---
 
+## Documentation
+
+- [**Architecture Overview**](./ARCHITECTURE.md): Detailed explanation of the
+  project’s architecture.
+- [**Implementation Details**](./IMPLEMENTATION.md): Comprehensive guide to the
+  codebase and functionality.
+
+---
+
 ## Known Limitations
 
 - Currently only supports integers; floating-point numbers are not handled.
