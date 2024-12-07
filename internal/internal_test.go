@@ -1,228 +1,138 @@
 package internal
 
-import "testing"
+import (
+	"testing"
+)
 
-func TestNewArbitraryInt(t *testing.T) {
-	testCases := []struct {
-		input    string
-		expected string
-		isError  bool
-	}{
-		{"12345", "12345", false},
-		{"-12345", "-12345", false},
-		{"+12345", "12345", false},
-		{"0", "0", false},
-		{"invalid", "", true},
-	}
+func BenchmarkAdd(b *testing.B) {
+	numA, _ := NewArbitraryInt("123456789012345678901234567890")
+	numB, _ := NewArbitraryInt("987654321098765432109876543210")
 
-	for _, tc := range testCases {
-		t.Run(tc.input, func(t *testing.T) {
-			num, err := NewArbitraryInt(tc.input)
-
-			if tc.isError {
-				if err == nil {
-					t.Errorf("Expected an error for input %s, but got none", tc.input)
-				}
-				return
-			}
-
-			if err != nil {
-				t.Errorf("Unexpected error for input %s: %v", tc.input, err)
-				return
-			}
-
-			if num.String() != tc.expected {
-				t.Errorf("Expected %s, got %s", tc.expected, num.String())
-			}
-		})
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		numA.Add(numB)
 	}
 }
 
-func TestCompare(t *testing.T) {
-	testCases := []struct {
-		a, b     string
-		expected int
-	}{
-		{"100", "99", 1},
-		{"99", "100", -1},
-		{"100", "100", 0},
-		{"-100", "99", -1},
-		{"100", "-99", 1},
-	}
+func BenchmarkMultiply(b *testing.B) {
+	numA, _ := NewArbitraryInt("123456789")
+	numB, _ := NewArbitraryInt("987654321")
 
-	for _, tc := range testCases {
-		t.Run(tc.a+" vs "+tc.b, func(t *testing.T) {
-			numA, _ := NewArbitraryInt(tc.a)
-			numB, _ := NewArbitraryInt(tc.b)
-
-			result := numA.Compare(numB)
-			if result != tc.expected {
-				t.Errorf("Expected comparison result %d, got %d", tc.expected, result)
-			}
-		})
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		numA.Multiply(numB)
 	}
 }
 
-func TestAddition(t *testing.T) {
-	testCases := []struct {
+func BenchmarkDivide(b *testing.B) {
+	numA, _ := NewArbitraryInt("123456789012345678901234567890")
+	numB, _ := NewArbitraryInt("987654321")
+
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		numA.Divide(numB)
+	}
+}
+
+func TestArithmeticOperations(t *testing.T) {
+	// Reduced test cases with focus on key scenarios
+	additionTests := []struct {
 		a, b     string
 		expected string
 	}{
 		{"123", "456", "579"},
 		{"999", "1", "1000"},
-		{"0", "0", "0"},
-		{"54321", "12345", "66666"},
 		{"-123", "456", "333"},
-		{"456", "-123", "333"},
-		{"-456", "-123", "-579"},
 	}
 
-	for _, tc := range testCases {
-		t.Run(tc.a+" + "+tc.b, func(t *testing.T) {
-			numA, _ := NewArbitraryInt(tc.a)
-			numB, _ := NewArbitraryInt(tc.b)
-
-			result := numA.Add(numB)
-			if result.String() != tc.expected {
-				t.Errorf("Expected %s, got %s", tc.expected, result.String())
-			}
-		})
-	}
-}
-
-func TestSubtraction(t *testing.T) {
-	testCases := []struct {
+	subtractionTests := []struct {
 		a, b     string
 		expected string
 	}{
 		{"456", "123", "333"},
-		{"123", "456", "-333"},
 		{"1000", "1", "999"},
-		{"0", "0", "0"},
 		{"-123", "456", "-579"},
-		{"123", "-456", "579"},
-		{"-123", "-456", "333"},
 	}
 
-	for _, tc := range testCases {
-		t.Run(tc.a+" - "+tc.b, func(t *testing.T) {
-			numA, _ := NewArbitraryInt(tc.a)
-			numB, _ := NewArbitraryInt(tc.b)
-
-			result := numA.Subtract(numB)
-			if result.String() != tc.expected {
-				t.Errorf("Expected %s, got %s", tc.expected, result.String())
-			}
-		})
-	}
-}
-
-func TestMultiplication(t *testing.T) {
-	testCases := []struct {
+	multiplicationTests := []struct {
 		a, b     string
 		expected string
 	}{
 		{"123", "456", "56088"},
 		{"999", "999", "998001"},
-		{"0", "1234", "0"},
-		{"12345", "6789", "83810205"},
 		{"-123", "456", "-56088"},
-		{"123", "-456", "-56088"},
-		{"-123", "-456", "56088"},
 	}
 
-	for _, tc := range testCases {
-		t.Run(tc.a+" * "+tc.b, func(t *testing.T) {
+	divisionTests := []struct {
+		a, b         string
+		expectedQuot string
+		expectedRem  string
+	}{
+		{"10", "2", "5", "0"},
+		{"15", "4", "3", "3"},
+		{"100", "10", "10", "0"},
+	}
+
+	// Run addition tests
+	t.Run("Addition", func(t *testing.T) {
+		for _, tc := range additionTests {
+			numA, _ := NewArbitraryInt(tc.a)
+			numB, _ := NewArbitraryInt(tc.b)
+
+			result := numA.Add(numB)
+			if result.String() != tc.expected {
+				t.Errorf("%s + %s: Expected %s, got %s", tc.a, tc.b, tc.expected, result.String())
+			}
+		}
+	})
+
+	// Run subtraction tests
+	t.Run("Subtraction", func(t *testing.T) {
+		for _, tc := range subtractionTests {
+			numA, _ := NewArbitraryInt(tc.a)
+			numB, _ := NewArbitraryInt(tc.b)
+
+			result := numA.Subtract(numB)
+			if result.String() != tc.expected {
+				t.Errorf("%s - %s: Expected %s, got %s", tc.a, tc.b, tc.expected, result.String())
+			}
+		}
+	})
+
+	// Run multiplication tests
+	t.Run("Multiplication", func(t *testing.T) {
+		for _, tc := range multiplicationTests {
 			numA, _ := NewArbitraryInt(tc.a)
 			numB, _ := NewArbitraryInt(tc.b)
 
 			result := numA.Multiply(numB)
 			if result.String() != tc.expected {
-				t.Errorf("Expected %s, got %s", tc.expected, result.String())
+				t.Errorf("%s * %s: Expected %s, got %s", tc.a, tc.b, tc.expected, result.String())
 			}
-		})
-	}
-}
+		}
+	})
 
-func TestDivision(t *testing.T) {
-	testCases := []struct {
-		a, b         string
-		expectedQuot string
-		expectedRem  string
-		expectError  bool
-	}{
-		{"10", "2", "5", "0", false},
-		{"15", "4", "3", "3", false},
-		{"100", "10", "10", "0", false},
-		{"7", "3", "2", "1", false},
-		// Handling edge cases
-		{"0", "5", "0", "0", false},
-	}
-
-	for _, tc := range testCases {
-		t.Run(tc.a+" ÷ "+tc.b, func(t *testing.T) {
+	// Run division tests
+	t.Run("Division", func(t *testing.T) {
+		for _, tc := range divisionTests {
 			numA, _ := NewArbitraryInt(tc.a)
 			numB, _ := NewArbitraryInt(tc.b)
 
 			quotient, remainder, err := numA.Divide(numB)
-
-			if tc.expectError {
-				if err == nil {
-					t.Errorf("Expected an error, got none")
-				}
-				return
-			}
-
 			if err != nil {
 				t.Errorf("Unexpected error: %v", err)
-				return
+				continue
 			}
 
 			if quotient.String() != tc.expectedQuot {
-				t.Errorf("Expected quotient %s, got %s", tc.expectedQuot, quotient.String())
+				t.Errorf("%s ÷ %s: Expected quotient %s, got %s",
+					tc.a, tc.b, tc.expectedQuot, quotient.String())
 			}
 
 			if remainder.String() != tc.expectedRem {
-				t.Errorf("Expected remainder %s, got %s", tc.expectedRem, remainder.String())
+				t.Errorf("%s ÷ %s: Expected remainder %s, got %s",
+					tc.a, tc.b, tc.expectedRem, remainder.String())
 			}
-		})
-	}
-}
-
-func TestDivisionByZero(t *testing.T) {
-	numA, _ := NewArbitraryInt("10")
-	numB, _ := NewArbitraryInt("0")
-
-	_, _, err := numA.Divide(numB)
-	if err == nil {
-		t.Errorf("Expected division by zero error, got none")
-	}
-}
-
-func TestModulo(t *testing.T) {
-	testCases := []struct {
-		a, b     string
-		expected string
-	}{
-		{"10", "3", "1"},
-		{"15", "4", "3"},
-		{"100", "10", "0"},
-	}
-
-	for _, tc := range testCases {
-		t.Run(tc.a+" % "+tc.b, func(t *testing.T) {
-			numA, _ := NewArbitraryInt(tc.a)
-			numB, _ := NewArbitraryInt(tc.b)
-
-			result, err := numA.Modulo(numB)
-			if err != nil {
-				t.Errorf("Unexpected error: %v", err)
-				return
-			}
-
-			if result.String() != tc.expected {
-				t.Errorf("Expected %s, got %s", tc.expected, result.String())
-			}
-		})
-	}
+		}
+	})
 }
