@@ -1,10 +1,12 @@
 package main
 
 import (
+	"arbitrary-precision-calculator/internal"
 	"bufio"
 	"fmt"
 	"log"
 	"os"
+	"regexp"
 	"strings"
 )
 
@@ -54,4 +56,44 @@ func (r *REPL) Start() {
 
 		fmt.Println("Result:", result)
 	}
+}
+
+// processExpression parses and evaluates a mathematical expression
+func (r *REPL) processExpression(input string) (string, error) {
+	// Remove extra whitespace
+	input = regexp.MustCompile(`\s+`).ReplaceAllString(input, " ")
+
+	// Split the input into parts
+	parts := strings.Split(input, " ")
+
+	// Handle special case for factorial
+	if len(parts) == 2 && (parts[1] == "!" || parts[1] == "factorial") {
+		return r.handleFactorial(parts[0])
+	}
+
+	// Ensure we have a valid expression (num op num)
+	if len(parts) != 3 {
+		return "", fmt.Errorf("invalid expression format")
+	}
+
+	// Parse first number
+	num1, err := internal.NewArbitraryInt(parts[0])
+	if err != nil {
+		return "", fmt.Errorf("invalid first number: %v", err)
+	}
+
+	// Parse operation
+	op, err := r.parseOperation(parts[1])
+	if err != nil {
+		return "", err
+	}
+
+	// Parse second number
+	num2, err := internal.NewArbitraryInt(parts[2])
+	if err != nil {
+		return "", fmt.Errorf("invalid second number: %v", err)
+	}
+
+	// Perform the operation
+	return r.performOperation(num1, num2, op)
 }
