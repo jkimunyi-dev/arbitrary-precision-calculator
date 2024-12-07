@@ -62,3 +62,30 @@ func TestCompare(t *testing.T) {
 		})
 	}
 }
+
+func TestAddition(t *testing.T) {
+	testCases := []struct {
+		a, b     string
+		expected string
+	}{
+		{"123", "456", "579"},
+		{"999", "1", "1000"},
+		{"0", "0", "0"},
+		{"54321", "12345", "66666"},
+		{"-123", "456", "333"},
+		{"456", "-123", "333"},
+		{"-456", "-123", "-579"},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.a+" + "+tc.b, func(t *testing.T) {
+			numA, _ := NewArbitraryInt(tc.a)
+			numB, _ := NewArbitraryInt(tc.b)
+
+			result := numA.Add(numB)
+			if result.String() != tc.expected {
+				t.Errorf("Expected %s, got %s", tc.expected, result.String())
+			}
+		})
+	}
+}
