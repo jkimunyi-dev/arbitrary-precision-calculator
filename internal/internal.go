@@ -69,3 +69,13 @@ func (a *ArbitraryInt) String() string {
 
 	return builder.String()
 }
+
+// Copy creates a deep copy of the ArbitraryInt
+func (a *ArbitraryInt) Copy() *ArbitraryInt {
+	digits := make([]int, len(a.digits))
+	copy(digits, a.digits)
+	return &ArbitraryInt{
+		digits:   digits,
+		negative: a.negative,
+	}
+}
