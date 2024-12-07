@@ -3,6 +3,7 @@ package internal
 import (
 	"fmt"
 	"math/big"
+	"strings"
 )
 
 // Pow computes the power of the number to a given exponent
@@ -87,14 +88,30 @@ func (a *ArbitraryInt) Factorial() (*ArbitraryInt, error) {
 
 // BaseConvert converts the number from one base to another
 func (a *ArbitraryInt) BaseConvert(fromBase, toBase int) (*ArbitraryInt, error) {
-	if fromBase < 2 || toBase < 2 {
-		return nil, fmt.Errorf("base must be >= 2")
+	if fromBase < 2 || fromBase > 36 || toBase < 2 || toBase > 36 {
+		return nil, fmt.Errorf("base must be between 2 and 36")
 	}
 
-	// Convert current number to a string in base `fromBase`
+	// Handle prefix for hexadecimal and binary inputs
+	inputStr := a.String()
+	if strings.HasPrefix(inputStr, "0x") && fromBase == 16 {
+		inputStr = strings.TrimPrefix(inputStr, "0x")
+	} else if strings.HasPrefix(inputStr, "0b") && fromBase == 2 {
+		inputStr = strings.TrimPrefix(inputStr, "0b")
+	}
+
+	// Convert to base 10 first
 	value := new(big.Int)
-	base10Str := a.String() // Assumes `String()` provides the number in base 10
-	_, success := value.SetString(base10Str, fromBase)
+	var success bool
+
+	// Use the correct parsing method based on the from base
+	if fromBase == 10 {
+		value, success = value.SetString(inputStr, 10)
+	} else {
+		// For non-base-10 inputs, parse using the specific base
+		value, success = value.SetString(inputStr, fromBase)
+	}
+
 	if !success {
 		return nil, fmt.Errorf("failed to convert from base %d", fromBase)
 	}
@@ -103,7 +120,12 @@ func (a *ArbitraryInt) BaseConvert(fromBase, toBase int) (*ArbitraryInt, error) 
 	targetStr := value.Text(toBase)
 
 	// Create a new ArbitraryInt from the target base string
-	return NewArbitraryInt(targetStr)
+	result, err := NewArbitraryInt(targetStr)
+	if err != nil {
+		return nil, fmt.Errorf("failed to create ArbitraryInt in base %d: %v", toBase, err)
+	}
+
+	return result, nil
 }
 
 // Helper function to handle comparison with error return
