@@ -97,3 +97,23 @@ func (r *REPL) processExpression(input string) (string, error) {
 	// Perform the operation
 	return r.performOperation(num1, num2, op)
 }
+
+// parseOperation converts a string to an Operation
+func (r *REPL) parseOperation(opStr string) (Operation, error) {
+	switch strings.ToLower(opStr) {
+	case "+":
+		return Add, nil
+	case "-":
+		return Subtract, nil
+	case "*":
+		return Multiply, nil
+	case "/":
+		return Divide, nil
+	case "^":
+		return Pow, nil
+	case "%":
+		return Modulo, nil
+	default:
+		return Add, fmt.Errorf("unsupported operation: %s", opStr)
+	}
+}
