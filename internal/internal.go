@@ -103,3 +103,44 @@ func (a *ArbitraryInt) Abs() *ArbitraryInt {
 func (a *ArbitraryInt) IsZero() bool {
 	return len(a.digits) == 0
 }
+
+// Compare compares two ArbitraryInt values
+// Returns:
+// 1 if a > b
+// -1 if a < b
+// 0 if a == b
+func (a *ArbitraryInt) Compare(b *ArbitraryInt) int {
+	// Handle sign differences first
+	if a.negative && !b.negative {
+		return -1
+	}
+	if !a.negative && b.negative {
+		return 1
+	}
+
+	// Compare absolute values
+	multiplier := 1
+	if a.negative {
+		multiplier = -1
+	}
+
+	// Compare by length first
+	if len(a.digits) > len(b.digits) {
+		return 1 * multiplier
+	}
+	if len(a.digits) < len(b.digits) {
+		return -1 * multiplier
+	}
+
+	// Compare digit by digit (from most significant)
+	for i := len(a.digits) - 1; i >= 0; i-- {
+		if a.digits[i] > b.digits[i] {
+			return 1 * multiplier
+		}
+		if a.digits[i] < b.digits[i] {
+			return -1 * multiplier
+		}
+	}
+
+	return 0
+}
