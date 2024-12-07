@@ -225,6 +225,17 @@ func (a *ArbitraryInt) leftShift() *ArbitraryInt {
 
 // Add performs efficient addition
 func (a *ArbitraryInt) Add(b *ArbitraryInt) *ArbitraryInt {
+	// Handle sign cases
+	if a.negative && !b.negative {
+		a.negative = false
+		result := b.Subtract(a)
+		return result
+	}
+	if !a.negative && b.negative {
+		b.negative = false
+		return a.Subtract(b)
+	}
+
 	maxLen := max(len(a.digits), len(b.digits))
 	result := make([]uint32, maxLen+1) // Extra space for carry
 	carry := uint32(0)
@@ -245,7 +256,15 @@ func (a *ArbitraryInt) Add(b *ArbitraryInt) *ArbitraryInt {
 		carry = sum / digitBase
 	}
 
-	return &ArbitraryInt{digits: result, negative: a.negative}
+	// Trim leading zeros
+	for len(result) > 1 && result[len(result)-1] == 0 {
+		result = result[:len(result)-1]
+	}
+
+	return &ArbitraryInt{
+		digits:   result,
+		negative: a.negative, // Preserve sign of original number
+	}
 }
 
 // Subtract performs efficient subtraction
