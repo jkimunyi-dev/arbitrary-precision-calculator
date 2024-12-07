@@ -1,30 +1,135 @@
-# Arbitrary Precision Integer Calculator
+# Arbitrary Precision Calculator
 
 ## Overview
-This is a custom implementation of an arbitrary precision integer calculator 
-built from scratch in Go, without using standard math libraries for large 
-integer operations.
+
+The Arbitrary Precision Calculator is a powerful command-line tool and REPL
+(Read-Eval-Print Loop) for performing mathematical operations on arbitrarily
+large integers. It is designed for precision and flexibility, supporting a wide
+range of operations without relying on libraries for its core functionality.
+
+---
 
 ## Features
-- Arbitrary precision integer representation
-- Basic arithmetic operations
-- Support for large number computations
 
-## Getting Started
-1. Ensure Go is installed (version 1.16+)
-2. Clone the repository
-3. Run `go mod tidy`
-4. Build and run the project
+- **Arbitrary Precision**: Handle extremely large integers with precision.
+- **Basic Arithmetic**: Addition, Subtraction, Multiplication, Division.
+- **Advanced Operations**: Modulo, Exponentiation.
+- **Interactive REPL**: Real-time calculations in an interactive terminal
+  session.
+- **Multiple Number Formats**: Supports Decimal, Binary, and Hexadecimal input.
+- **Extensibility**: Easily extendable for additional operations.
 
-## Implemented Operations
-- Addition
-- Subtraction
-- Multiplication
-- Division
-- Modulo
-- Exponentiation
-- Factorial
+---
 
-## Project Structure
-- `cmd/`: Executable commands
-- `internal/`: Core library implementation
+## Installation
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/your-username/arbitrary-precision-calculator.git
+   ```
+
+2. Navigate to the project directory:
+   ```bash
+   cd arbitrary-precision-calculator
+   ```
+
+3. Build the application:
+   ```bash
+   go build -o calculator main.go
+   ```
+
+---
+
+## Usage
+
+### Running the Calculator
+
+The calculator can be used in two modes:
+
+1. **Command-Line Mode**: Perform single calculations directly from the
+   terminal.
+2. **Interactive REPL Mode**: Enter multiple calculations interactively in a
+   session.
+
+### Command-Line Mode
+
+To run a single calculation:
+
+```bash
+./calculator [num1] [operation] [num2]
+```
+
+#### Supported Operations
+
+| Operation      | Symbol | Description                                  |
+| -------------- | ------ | -------------------------------------------- |
+| Addition       | `+`    | Adds two numbers                             |
+| Subtraction    | `-`    | Subtracts two numbers                        |
+| Multiplication | `*`    | Multiplies two numbers                       |
+| Division       | `/`    | Divides two numbers (quotient and remainder) |
+| Modulo         | `%`    | Computes the remainder of division           |
+| Exponentiation | `^`    | Raises a number to a power                   |
+
+Examples:
+
+```bash
+./calculator 1000 + 2000
+./calculator 2 ^ 10
+```
+
+### Interactive REPL Mode
+
+To start the REPL mode, simply run the program without arguments:
+
+```bash
+./calculator
+```
+
+In REPL mode, you can enter calculations interactively, such as:
+
+```bash
+1000 + 2000
+5 ^ 3
+exit
+```
+
+### Options
+
+| Option  | Flag              | Description                 |
+| ------- | ----------------- | --------------------------- |
+| Help    | `--help`, `-h`    | Show usage instructions     |
+| Version | `--version`, `-v` | Display version information |
+
+Example:
+
+```bash
+./calculator --help
+./calculator --version
+```
+
+---
+
+## Known Limitations
+
+- Currently only supports integers; floating-point numbers are not handled.
+- Non-decimal bases (binary, hexadecimal) require specific input formats.
+
+---
+
+## Future Enhancements
+
+- Add support for floating-point arithmetic.
+- Implement additional operations like logarithms and trigonometric functions.
+- Optimize performance for extremely large calculations.
+
+---
+
+## Contributing
+
+Contributions are welcome! Please fork the repository and submit a pull request.
+
+---
+
+## License
+
+This project is licensed under the MIT License.
