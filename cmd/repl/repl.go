@@ -164,3 +164,13 @@ func (r *REPL) handleFactorial(numStr string) (string, error) {
 
 	return result.String(), nil
 }
+
+// Helper function for comparing two ArbitraryInts
+func compareResult(a, b *internal.ArbitraryInt) int {
+	return a.Compare(b)
+}
+
+func main() {
+	repl := &REPL{}
+	repl.Start()
+}
