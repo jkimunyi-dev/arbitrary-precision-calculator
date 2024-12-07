@@ -299,3 +299,63 @@ func (a *ArbitraryInt) Multiply(b *ArbitraryInt) *ArbitraryInt {
 		negative: resultNegative,
 	}
 }
+
+// Divide performs division of two ArbitraryInt numbers
+func (a *ArbitraryInt) Divide(b *ArbitraryInt) (*ArbitraryInt, *ArbitraryInt, error) {
+	// Handle division by zero
+	if b.IsZero() {
+		return nil, nil, fmt.Errorf("division by zero")
+	}
+
+	// Handle zero dividend
+	if a.IsZero() {
+		return &ArbitraryInt{digits: []int{}, negative: false},
+			&ArbitraryInt{digits: []int{}, negative: false},
+			nil
+	}
+
+	// Determine result sign
+	resultNegative := a.negative != b.negative
+
+	// Take absolute values for division
+	dividend := a.Abs()
+	divisor := b.Abs()
+
+	// If divisor is larger than dividend, quotient is zero, remainder is dividend
+	if dividend.Compare(divisor) < 0 {
+		return &ArbitraryInt{digits: []int{}, negative: false},
+			a.Copy(),
+			nil
+	}
+
+	// Long division algorithm
+	quotient := &ArbitraryInt{digits: []int{}}
+	remainder := &ArbitraryInt{digits: []int{}}
+
+	// Start from the most significant digit
+	for i := len(dividend.digits) - 1; i >= 0; i-- {
+		// Build remainder
+		remainder.digits = append([]int{dividend.digits[i]}, remainder.digits...)
+		remainder.removeLeadingZeros()
+
+		// Initialize current quotient digit
+		currentQuotientDigit := 0
+
+		// Repeatedly subtract divisor
+		for remainder.Compare(divisor) >= 0 {
+			remainder = remainder.Subtract(divisor)
+			currentQuotientDigit++
+		}
+
+		// Prepend quotient digit
+		if currentQuotientDigit > 0 || len(quotient.digits) > 0 {
+			quotient.digits = append([]int{currentQuotientDigit}, quotient.digits...)
+		}
+	}
+
+	// Set signs
+	quotient.negative = resultNegative
+	remainder.negative = a.negative // Remainder takes sign of dividend
+
+	return quotient, remainder, nil
+}
