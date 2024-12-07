@@ -42,30 +42,14 @@ ensuring the core functionality is clean, reusable, and easily testable.
   - Validates and processes large integers as strings.
   - Ensures accurate results without using external libraries.
 
----
-
-### 4. **Utilities**
-
 - **File:** `internal/advanced_operation.go`
 - **Responsibilities:**
-  - Contains helper functions for parsing and validating input.
-  - Converts between different numerical bases (binary, hexadecimal, etc.).
+  - Contains implementation of advanced operations such as Pow()...
   - Handles error formatting and reporting.
 
 ---
 
-### 5. **Constants**
-
-- **File:** `internal/constants.go`
-- **Responsibilities:**
-  - Stores constant values used throughout the application, such as operation
-    symbols and error messages.
-
----
-
----
-
-### 5. **Tests**
+### 4. **Tests**
 
 - **File:** `internal/unit_test.go`
 - **Responsibilities:**
@@ -73,7 +57,7 @@ ensuring the core functionality is clean, reusable, and easily testable.
 
 - **File:** `internal/advanced_operations_test.go`
 - **Responsibilities:**
-  - Performs tests for `bash advanced_operation.go`
+  - Performs tests for `advanced_operation.go`
 
 ---
 
