@@ -91,3 +91,10 @@ func (a *ArbitraryInt) removeLeadingZeros() {
 		a.negative = false
 	}
 }
+
+// Abs returns the absolute value of the number
+func (a *ArbitraryInt) Abs() *ArbitraryInt {
+	copy := a.Copy()
+	copy.negative = false
+	return copy
+}
