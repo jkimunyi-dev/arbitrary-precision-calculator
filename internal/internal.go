@@ -260,3 +260,42 @@ func (a *ArbitraryInt) Subtract(b *ArbitraryInt) *ArbitraryInt {
 		negative: resultNegative,
 	}
 }
+
+// Multiply performs multiplication of two ArbitraryInt numbers
+func (a *ArbitraryInt) Multiply(b *ArbitraryInt) *ArbitraryInt {
+	// Handle zero cases
+	if a.IsZero() || b.IsZero() {
+		return &ArbitraryInt{digits: []int{}, negative: false}
+	}
+
+	// Determine result sign
+	resultNegative := a.negative != b.negative
+
+	// Initialize result array
+	result := make([]int, len(a.digits)+len(b.digits))
+
+	// Perform long multiplication
+	for i := 0; i < len(a.digits); i++ {
+		for j := 0; j < len(b.digits); j++ {
+			// Multiply digits and add to appropriate position
+			product := a.digits[i] * b.digits[j]
+			total := result[i+j] + product
+
+			// Update result with current digit
+			result[i+j] = total % 10
+
+			// Carry over to next digit
+			result[i+j+1] += total / 10
+		}
+	}
+
+	// Remove leading zeros
+	for len(result) > 0 && result[len(result)-1] == 0 {
+		result = result[:len(result)-1]
+	}
+
+	return &ArbitraryInt{
+		digits:   result,
+		negative: resultNegative,
+	}
+}
