@@ -116,3 +116,30 @@ func TestSubtraction(t *testing.T) {
 		})
 	}
 }
+
+func TestMultiplication(t *testing.T) {
+	testCases := []struct {
+		a, b     string
+		expected string
+	}{
+		{"123", "456", "56088"},
+		{"999", "999", "998001"},
+		{"0", "1234", "0"},
+		{"12345", "6789", "83810205"},
+		{"-123", "456", "-56088"},
+		{"123", "-456", "-56088"},
+		{"-123", "-456", "56088"},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.a+" * "+tc.b, func(t *testing.T) {
+			numA, _ := NewArbitraryInt(tc.a)
+			numB, _ := NewArbitraryInt(tc.b)
+
+			result := numA.Multiply(numB)
+			if result.String() != tc.expected {
+				t.Errorf("Expected %s, got %s", tc.expected, result.String())
+			}
+		})
+	}
+}
