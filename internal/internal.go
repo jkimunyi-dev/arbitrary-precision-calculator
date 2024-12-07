@@ -195,3 +195,68 @@ func (a *ArbitraryInt) Add(b *ArbitraryInt) *ArbitraryInt {
 		negative: a.negative, // Preserve original sign
 	}
 }
+
+// Subtract performs subtraction of two ArbitraryInt numbers
+func (a *ArbitraryInt) Subtract(b *ArbitraryInt) *ArbitraryInt {
+	// Handle sign differences
+	if a.negative != b.negative {
+		// Different signs: a - (-b) = a + b
+		// -a - b = -(a + b)
+		result := a.Abs().Add(b.Abs())
+		result.negative = a.negative
+		return result
+	}
+
+	// Determine which absolute value is larger
+	comparison := a.Abs().Compare(b.Abs())
+	var larger, smaller *ArbitraryInt
+	resultNegative := false
+
+	switch comparison {
+	case 0:
+		// Equal magnitude, result is zero
+		return &ArbitraryInt{digits: []int{}, negative: false}
+	case 1:
+		larger = a
+		smaller = b
+		resultNegative = a.negative
+	case -1:
+		larger = b
+		smaller = a
+		resultNegative = !a.negative
+	}
+
+	// Perform subtraction
+	result := make([]int, len(larger.digits))
+	copy(result, larger.digits)
+
+	borrow := 0
+	for i := 0; i < len(result); i++ {
+		// Get smaller digit, use 0 if out of range
+		smallerDigit := 0
+		if i < len(smaller.digits) {
+			smallerDigit = smaller.digits[i]
+		}
+
+		// Subtract with borrow
+		currentDigit := result[i] - smallerDigit - borrow
+		if currentDigit < 0 {
+			currentDigit += 10
+			borrow = 1
+		} else {
+			borrow = 0
+		}
+
+		result[i] = currentDigit
+	}
+
+	// Remove leading zeros
+	for len(result) > 0 && result[len(result)-1] == 0 {
+		result = result[:len(result)-1]
+	}
+
+	return &ArbitraryInt{
+		digits:   result,
+		negative: resultNegative,
+	}
+}
