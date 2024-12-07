@@ -143,3 +143,48 @@ func TestMultiplication(t *testing.T) {
 		})
 	}
 }
+
+func TestDivision(t *testing.T) {
+	testCases := []struct {
+		a, b         string
+		expectedQuot string
+		expectedRem  string
+		expectError  bool
+	}{
+		{"10", "2", "5", "0", false},
+		{"15", "4", "3", "3", false},
+		{"100", "10", "10", "0", false},
+		{"7", "3", "2", "1", false},
+		// Handling edge cases
+		{"0", "5", "0", "0", false},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.a+" ÷ "+tc.b, func(t *testing.T) {
+			numA, _ := NewArbitraryInt(tc.a)
+			numB, _ := NewArbitraryInt(tc.b)
+
+			quotient, remainder, err := numA.Divide(numB)
+
+			if tc.expectError {
+				if err == nil {
+					t.Errorf("Expected an error, got none")
+				}
+				return
+			}
+
+			if err != nil {
+				t.Errorf("Unexpected error: %v", err)
+				return
+			}
+
+			if quotient.String() != tc.expectedQuot {
+				t.Errorf("Expected quotient %s, got %s", tc.expectedQuot, quotient.String())
+			}
+
+			if remainder.String() != tc.expectedRem {
+				t.Errorf("Expected remainder %s, got %s", tc.expectedRem, remainder.String())
+			}
+		})
+	}
+}
