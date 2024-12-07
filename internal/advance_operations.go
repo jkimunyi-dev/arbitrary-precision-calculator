@@ -2,6 +2,7 @@ package internal
 
 import (
 	"fmt"
+	"math/big"
 )
 
 // Pow computes the power of the number to a given exponent
@@ -12,7 +13,7 @@ func (a *ArbitraryInt) Pow(exponent *ArbitraryInt) (*ArbitraryInt, error) {
 	}
 
 	// Convert exponent to int for easier computation
-	expInt := 0
+	expInt := uint32(0)
 	for _, digit := range exponent.digits {
 		expInt = expInt*10 + digit
 	}
@@ -56,7 +57,7 @@ func (a *ArbitraryInt) Factorial() (*ArbitraryInt, error) {
 	}
 
 	// Convert to integer for easier computation
-	factorialLimit := 0
+	factorialLimit := uint32(0)
 	for _, digit := range a.digits {
 		factorialLimit = factorialLimit*10 + digit
 	}
@@ -85,58 +86,24 @@ func (a *ArbitraryInt) Factorial() (*ArbitraryInt, error) {
 }
 
 // BaseConvert converts the number from one base to another
-func (a *ArbitraryInt) BaseConvert(fromBase, toBase int) (string, error) {
-	// Validate base ranges
-	if fromBase < 2 || fromBase > 36 || toBase < 2 || toBase > 36 {
-		return "", fmt.Errorf("bases must be between 2 and 36")
+func (a *ArbitraryInt) BaseConvert(fromBase, toBase int) (*ArbitraryInt, error) {
+	if fromBase < 2 || toBase < 2 {
+		return nil, fmt.Errorf("base must be >= 2")
 	}
 
-	// Convert from current base to decimal (base 10)
-	decimalValue, _ := NewArbitraryInt("0")
-	multiplier, _ := NewArbitraryInt("1")
-
-	// Create base integers
-	fromBaseInt, _ := NewArbitraryInt(fmt.Sprintf("%d", fromBase))
-
-	for _, digit := range a.digits {
-		// Use a wrapper for Multiply and Add that extracts the first return value
-		digitInt, _ := NewArbitraryInt(fmt.Sprintf("%d", digit))
-
-		multiplier = multiplier.Multiply(fromBaseInt)
-		tempMultiplied := multiplier.Multiply(digitInt)
-		decimalValue = decimalValue.Add(tempMultiplied)
+	// Convert current number to a string in base `fromBase`
+	value := new(big.Int)
+	base10Str := a.String() // Assumes `String()` provides the number in base 10
+	_, success := value.SetString(base10Str, fromBase)
+	if !success {
+		return nil, fmt.Errorf("failed to convert from base %d", fromBase)
 	}
 
-	// Convert decimal to target base
-	if toBase == 10 {
-		// Simply return the decimal representation
-		return decimalValue.String(), nil
-	}
+	// Convert to target base
+	targetStr := value.Text(toBase)
 
-	// Convert to target base using successive division
-	result := ""
-	remainingValue := decimalValue.Copy()
-	baseInt, _ := NewArbitraryInt(fmt.Sprintf("%d", toBase))
-
-	// Create a zero for comparison
-	zero, _ := NewArbitraryInt("0")
-
-	for compareResult(remainingValue, zero) > 0 {
-		quotient, remainder, _ := remainingValue.Divide(baseInt)
-
-		// Convert remainder to character
-		digitChar := convertDigitToChar(remainder.digits[0])
-		result = string(digitChar) + result
-
-		remainingValue = quotient
-	}
-
-	// Handle negative sign
-	if a.negative {
-		result = "-" + result
-	}
-
-	return result, nil
+	// Create a new ArbitraryInt from the target base string
+	return NewArbitraryInt(targetStr)
 }
 
 // Helper function to handle comparison with error return
