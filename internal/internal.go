@@ -359,3 +359,9 @@ func (a *ArbitraryInt) Divide(b *ArbitraryInt) (*ArbitraryInt, *ArbitraryInt, er
 
 	return quotient, remainder, nil
 }
+
+// Modulo returns the remainder of division
+func (a *ArbitraryInt) Modulo(b *ArbitraryInt) (*ArbitraryInt, error) {
+	_, remainder, err := a.Divide(b)
+	return remainder, err
+}
