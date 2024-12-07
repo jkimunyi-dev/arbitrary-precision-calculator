@@ -1,0 +1,166 @@
+# Binaries for programs and plugins
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Test binary, built with `go test -c`
+*.test
+
+# Output of the go coverage tool, specifically when used with LiteIDE
+*.out
+
+# Dependency directories (remove the comment below to include it)
+# vendor/
+
+# Go workspace file
+go.work
+go.work.sum
+
+# IDE and Editor directories
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Compiled Object files
+*.o
+*.a
+
+# Logs
+*.log
+
+# Environment files
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+
+# Build output directories
+build/
+dist/
+out/
+bin/
+
+# Temporary files
+tmp/
+temp/
+
+# Mac system files
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Thumbnails
+._*
+
+# Files that might appear in the root of a volume
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+
+# Directories potentially created on remote AFP share
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+
+# Windows thumbnail cache files
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+
+# Windows Dump files
+*.stackdump
+
+# Windows folder config file
+[Dd]esktop.ini
+
+# Windows Recycle Bin used on file system
+$RECYCLE.BIN/
+
+# Windows Installer files
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+
+# Windows shortcuts
+*.lnk
+
+# Go coverage reports
+coverage.txt
+coverage.out
+coverage.html
+
+# Profiling data
+*.prof
+*.pprof
+
+# Compiled binaries with version info
+*_linux
+*_windows
+*_darwin
+*_amd64
+*_arm64
+
+# Project-specific build artifacts
+*.tar.gz
+*.zip
+
+# Dependency management
+go.sum
+
+# Optional: VSCode settings
+.vscode/settings.json
+.vscode/launch.json
+
+# Optional: IntelliJ IDEA files
+*.iml
+*.ipr
+*.iws
+
+# Optional: GoLand files
+.idea/
+
+# Kubernetes
+*.kubeconfig
+
+# Secrets and sensitive information
+secrets/
+*.key
+*.pem
+
+# Compiled protobuf files
+*.pb.go
+
+# Cache directories
+.cache/
+.npm/
+.golang/
+
+# Local development configuration
+config.local.yaml
+config.local.json
+
+# Backup files
+*.bak
+*.gho
+*.ori
+*.orig
+*.tmp
+
+# CI/CD and deployment
+.circleci/
+.github/
+.gitlab-ci.yml
