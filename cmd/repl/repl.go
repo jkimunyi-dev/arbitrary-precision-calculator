@@ -117,3 +117,35 @@ func (r *REPL) parseOperation(opStr string) (Operation, error) {
 		return Add, fmt.Errorf("unsupported operation: %s", opStr)
 	}
 }
+
+// performOperation executes the specified operation
+func (r *REPL) performOperation(num1, num2 *internal.ArbitraryInt, op Operation) (string, error) {
+	switch op {
+	case Add:
+		return num1.Add(num2).String(), nil
+	case Subtract:
+		return num1.Subtract(num2).String(), nil
+	case Multiply:
+		return num1.Multiply(num2).String(), nil
+	case Divide:
+		quotient, _, err := num1.Divide(num2)
+		if err != nil {
+			return "", err
+		}
+		return quotient.String(), nil
+	case Pow:
+		result, err := num1.Pow(num2)
+		if err != nil {
+			return "", err
+		}
+		return result.String(), nil
+	case Modulo:
+		result, err := num1.Modulo(num2)
+		if err != nil {
+			return "", err
+		}
+		return result.String(), nil
+	default:
+		return "", fmt.Errorf("unsupported operation")
+	}
+}
