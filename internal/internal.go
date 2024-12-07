@@ -144,3 +144,54 @@ func (a *ArbitraryInt) Compare(b *ArbitraryInt) int {
 
 	return 0
 }
+
+// Add performs addition of two ArbitraryInt numbers
+func (a *ArbitraryInt) Add(b *ArbitraryInt) *ArbitraryInt {
+	// Handle sign differences
+	if a.negative != b.negative {
+		// If signs are different, this becomes a subtraction problem
+		if a.negative {
+			// -a + b = b - |a|
+			return b.Subtract(a.Abs())
+		}
+		// a + (-b) = a - |b|
+		return a.Subtract(b.Abs())
+	}
+
+	// Determine max length for addition
+	maxLen := max(len(a.digits), len(b.digits))
+	result := make([]int, maxLen+1) // +1 for potential carry
+
+	// Perform digit-by-digit addition
+	carry := 0
+	for i := 0; i < maxLen; i++ {
+		// Get digits, use 0 if index out of range
+		aDigit := 0
+		if i < len(a.digits) {
+			aDigit = a.digits[i]
+		}
+
+		bDigit := 0
+		if i < len(b.digits) {
+			bDigit = b.digits[i]
+		}
+
+		// Add digits and carry
+		sum := aDigit + bDigit + carry
+		result[i] = sum % 10
+		carry = sum / 10
+	}
+
+	// Handle final carry
+	if carry > 0 {
+		result[maxLen] = carry
+	} else {
+		result = result[:maxLen]
+	}
+
+	// Create new ArbitraryInt with the result
+	return &ArbitraryInt{
+		digits:   result,
+		negative: a.negative, // Preserve original sign
+	}
+}
