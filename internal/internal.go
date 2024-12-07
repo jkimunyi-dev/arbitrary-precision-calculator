@@ -46,3 +46,26 @@ func NewArbitraryInt(input string) (*ArbitraryInt, error) {
 		negative: negative,
 	}, nil
 }
+
+// String converts ArbitraryInt back to a string representation
+func (a *ArbitraryInt) String() string {
+	// Handle zero case
+	if len(a.digits) == 0 {
+		return "0"
+	}
+
+	// Build string from most significant digit
+	builder := strings.Builder{}
+
+	// Add negative sign if needed
+	if a.negative {
+		builder.WriteRune('-')
+	}
+
+	// Write digits from most to least significant
+	for i := len(a.digits) - 1; i >= 0; i-- {
+		builder.WriteRune(rune(a.digits[i] + '0'))
+	}
+
+	return builder.String()
+}
