@@ -149,3 +149,18 @@ func (r *REPL) performOperation(num1, num2 *internal.ArbitraryInt, op Operation)
 		return "", fmt.Errorf("unsupported operation")
 	}
 }
+
+// handleFactorial performs factorial operation
+func (r *REPL) handleFactorial(numStr string) (string, error) {
+	num, err := internal.NewArbitraryInt(numStr)
+	if err != nil {
+		return "", fmt.Errorf("invalid number for factorial: %v", err)
+	}
+
+	result, err := num.Factorial()
+	if err != nil {
+		return "", err
+	}
+
+	return result.String(), nil
+}
