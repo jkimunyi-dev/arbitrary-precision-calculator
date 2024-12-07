@@ -79,3 +79,15 @@ func (a *ArbitraryInt) Copy() *ArbitraryInt {
 		negative: a.negative,
 	}
 }
+
+// removeLeadingZeros removes unnecessary leading zeros
+func (a *ArbitraryInt) removeLeadingZeros() {
+	for len(a.digits) > 0 && a.digits[len(a.digits)-1] == 0 {
+		a.digits = a.digits[:len(a.digits)-1]
+	}
+
+	// Handle zero case
+	if len(a.digits) == 0 {
+		a.negative = false
+	}
+}
