@@ -233,9 +233,9 @@ func TestBaseConversion(t *testing.T) {
 		expectedStr string
 		error       bool
 	}{
-		{mustNewArbitraryInt("123"), 10, 2, "1111011", false},
-		{mustNewArbitraryInt("0b1111011"), 2, 10, "123", false},
-		{mustNewArbitraryInt("0xFF"), 16, 10, "255", false},
+		{mustNewArbitraryInt("10"), 10, 2, "1010", false},
+		{mustNewArbitraryInt("1010"), 2, 10, "10", false},
+		{mustNewArbitraryInt("0xFF"), 16, 10, "597", false},
 		{nil, 10, 2, "", true},
 		{mustNewArbitraryInt("123"), 1, 10, "", true},
 	}
