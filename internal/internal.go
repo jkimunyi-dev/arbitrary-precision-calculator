@@ -225,7 +225,6 @@ func (a *ArbitraryInt) leftShift() *ArbitraryInt {
 
 // Add performs efficient addition
 func (a *ArbitraryInt) Add(b *ArbitraryInt) *ArbitraryInt {
-	// Handle sign cases
 	if a.negative && !b.negative {
 		a.negative = false
 		result := b.Subtract(a)
@@ -240,20 +239,26 @@ func (a *ArbitraryInt) Add(b *ArbitraryInt) *ArbitraryInt {
 	result := make([]uint32, maxLen+1) // Extra space for carry
 	carry := uint32(0)
 
-	for i := 0; i < maxLen || carry > 0; i++ {
-		var x, y uint32
-		if i < len(a.digits) {
-			x = a.digits[i]
-		}
-		if i < len(b.digits) {
-			y = b.digits[i]
-		}
+	const digitBase = 1_000_000_000 // Base used for digit packing, 9 digits per uint32
 
-		const digitBase = 1_000_000_000 // Base used for digit packing, 9 digits per uint32
+	// Zero-padding a.digits and b.digits
+	aDigits := make([]uint32, maxLen)
+	bDigits := make([]uint32, maxLen)
+	copy(aDigits[:len(a.digits)], a.digits)
+	copy(bDigits[:len(b.digits)], b.digits)
 
-		sum := x + y + carry
+	// Perform addition with carry
+	for i := 0; i < maxLen; i++ {
+		sum := aDigits[i] + bDigits[i] + carry
 		result[i] = sum % digitBase
 		carry = sum / digitBase
+	}
+
+	// Handle final carry
+	if carry > 0 {
+		result[maxLen] = carry
+	} else {
+		result = result[:maxLen] // Trim unused space if no carry
 	}
 
 	// Trim leading zeros
@@ -263,7 +268,7 @@ func (a *ArbitraryInt) Add(b *ArbitraryInt) *ArbitraryInt {
 
 	return &ArbitraryInt{
 		digits:   result,
-		negative: a.negative, // Preserve sign of original number
+		negative: a.negative,
 	}
 }
 
