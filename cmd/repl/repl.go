@@ -1,14 +1,18 @@
 package main
 
 import (
-	"arbitrary-precision-calculator/internal"
 	"bufio"
 	"fmt"
 	"log"
 	"os"
 	"regexp"
 	"strings"
+
+	"arbitrary-precision-calculator/internal"
 )
+
+// Operation represents a mathematical operation
+type Operation int
 
 const (
 	Add Operation = iota
