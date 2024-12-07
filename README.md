@@ -25,7 +25,7 @@ range of operations without relying on libraries for its core functionality.
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/your-username/arbitrary-precision-calculator.git
+   git clone https://github.com/jkimunyi-dev/arbitrary-precision-calculator.git
    ```
 
 2. Navigate to the project directory:
