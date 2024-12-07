@@ -365,3 +365,11 @@ func (a *ArbitraryInt) Modulo(b *ArbitraryInt) (*ArbitraryInt, error) {
 	_, remainder, err := a.Divide(b)
 	return remainder, err
 }
+
+// Helper function to get maximum of two integers
+func max(a, b int) int {
+	if a > b {
+		return a
+	}
+	return b
+}
