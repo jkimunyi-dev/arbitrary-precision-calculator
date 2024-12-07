@@ -198,3 +198,31 @@ func TestDivisionByZero(t *testing.T) {
 		t.Errorf("Expected division by zero error, got none")
 	}
 }
+
+func TestModulo(t *testing.T) {
+	testCases := []struct {
+		a, b     string
+		expected string
+	}{
+		{"10", "3", "1"},
+		{"15", "4", "3"},
+		{"100", "10", "0"},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.a+" % "+tc.b, func(t *testing.T) {
+			numA, _ := NewArbitraryInt(tc.a)
+			numB, _ := NewArbitraryInt(tc.b)
+
+			result, err := numA.Modulo(numB)
+			if err != nil {
+				t.Errorf("Unexpected error: %v", err)
+				return
+			}
+
+			if result.String() != tc.expected {
+				t.Errorf("Expected %s, got %s", tc.expected, result.String())
+			}
+		})
+	}
+}
